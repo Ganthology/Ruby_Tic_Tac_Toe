@@ -21,5 +21,17 @@ class Board
   end
 end
 
+class Player
+  attr_reader :sign
+  attr_accessor :name :id
+  @@id = 0
+
+  def initialize(name, sign)
+    @name = name
+    @sign = sign
+    @id = @@id
+    @@id += 1
+  end
+end
 game = Board.new()
 game.display_board

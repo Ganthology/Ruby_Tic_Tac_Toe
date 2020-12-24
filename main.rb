@@ -13,11 +13,29 @@ class Board
   end
 
   def new_board
-    Array.new(3, Array.new(3,' ')) 
+    Array.new(3, Array.new(3,'_')) 
   end
 
   def display_board
-    @board.each { |row| p row}
+    puts '  0  1  2'
+    @board.each_with_index { | row, index | puts "#{index} #{row.join("  ")}"}
+  end
+
+  def place(row, column, sign)
+    @board[row][column] = sign
+  end
+
+  def win?
+    board.each do |row|
+      return true if row.all?(row[0]) && row.none?('_')
+    end
+    board.transpose.each do |column|
+      return true if column.all?(column[0]) && column.none?('_')
+    end
+    diagonal = true if board[0][0] != '_' && board[0][0] == board[1][1] && board[1][1] == board[2][2]
+    diagonal = true if board[0][0] != '_' && board[0][2] == board[1][1] && board[1][1] == board[2][0]
+    return true if diagonal && board[1][1] != '_'
+    false
   end
 end
 
@@ -34,37 +52,10 @@ class Player
   end
 end
 
-module WinningConditions
-  player1_win = false
-  player2_win = false
-
-  def horizontal(board, player1, player2)
-    # board.any row.all?(same sign)
-    board.each do |row|
-      player1_win = true if row.all?(player1.sign)
-      player2_win = true if row.all?(player2.sign)
-    end
-  end
-
-  def vertical(board, player1, player2)
-    board.transpose.each do |column|
-      player1_win = true if column.all?(player1.sign)
-      player2_win = true if column.all?(player2.sign)
-  end
-
-  def diagonal(board, player1, player2)
-    diagonal = true if board[0][0] == board[1][1] == board[2][2]
-    diagonal = true if board[0][2] == board[1][1] == board[2][0]
-    player1_win = true if diagonal && board[1][1] == player1.sign
-    player2_win = true if diagonal && board[1][1] == player2.sign
-end
-
 class TicTacToe
-  include WinningConditions
-
-  def initialize(player1 = Player.new('Player 1', 'O'), player2 = Player.new('Player 2', 'X'))
-    @player1 = player1
-    @player2 = player2
+  attr_accessor :player1, :player2
+  def initialize()
+    @current_player = ' '
     @board = Board.new()
   end
 
@@ -72,8 +63,31 @@ class TicTacToe
     # while not winning conditions && none?(" ")
     # receive input from players
     # turn by turn, display current board with signs on it
-
+    puts "Enter Player 1's Name:"
+    player1_name = gets.chomp
+    puts "Enter a single character as your sign:"
+    player1_sign = gets.chomp
+    puts "Enter Player 2's Name:"
+    player2_name = gets.chomp
+    puts "Enter a single character as your sign:"
+    player2_sign = gets.chomp
+    @player1 = Player.new(player1_name, player1_sign)
+    @player2 = Player.new(player2_name, player2_sign)
+    until(@board.win?) do
+      current_player = current_player != @player1 ? @player1 : @player2;
+      puts "It's #{current_player.name} turn!"
+      puts "Enter a the row and column with space between..."
+      @board.display_board
+      coordinates = gets.chomp.split.map{|coor| coor.to_i}
+      @board.place(coordinates[0], coordinates[1], current_player.sign)
+    end
   end
+
+  def win?
+    @board.win?
+  end
+
 end
-game = Board.new()
-game.display_board
+
+game = TicTacToe.new
+game.game

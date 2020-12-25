@@ -1,5 +1,3 @@
-require './board.rb'
-
 class TicTacToe
   attr_accessor :player1, :player2, :current_player
   def initialize
@@ -32,7 +30,7 @@ class TicTacToe
       coordinates = gets.chomp.split.map { |coor| coor.to_i }
       until @board.valid_coor?(coordinates[0], coordinates[1]) && !@board.occupied?(coordinates[0], coordinates[1])
         puts('Wrong format, please enter again...') if !@board.valid_coor?(coordinates[0], coordinates[1])
-        puts('The place is occupied, please choose another place...') if @board.occupied?(coordinates[0], coordinates[1])
+        puts('The place is occupied, please choose another place...') if @board.occupied?(coordinates[0], coordinates[1]) && @board.valid_coor?(coordinates[0], coordinates[1])
         coordinates = gets.chomp.split.map { |coor| coor.to_i }
       end
       @board.place(coordinates[0], coordinates[1], current_player.sign)

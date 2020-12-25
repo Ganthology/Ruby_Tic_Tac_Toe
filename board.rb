@@ -20,13 +20,21 @@ class Board
 
   def valid_coor?(row, column)
     # assume the size is perfect square
+    return false if row.nil? || column.nil?
+
     return false if row >= 3 || column >= 3
+
     true
   end
 
   def occupied?(row, column)
     # assume the size is perfect square
+    return false if row.nil? || column.nil?
+
+    return false if row >= 3 || column >= 3
+
     return true if @board[row][column] != '_'
+
     false
   end
 

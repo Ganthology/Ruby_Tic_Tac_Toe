@@ -13,7 +13,7 @@ class Board
   end
 
   def new_board
-    Array.new(3, Array.new(3,'_')) 
+    @board = Array.new(3) {Array.new(3, "_")}
   end
 
   def display_board

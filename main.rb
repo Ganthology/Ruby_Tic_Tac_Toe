@@ -40,8 +40,7 @@ class Board
 end
 
 class Player
-  attr_reader :sign
-  attr_accessor :name, :id
+  attr_reader :sign, :name, :id
   @@id = 0
 
   def initialize(name, sign)
@@ -53,7 +52,7 @@ class Player
 end
 
 class TicTacToe
-  attr_accessor :player1, :player2
+  attr_accessor :player1, :player2, :current_player
   def initialize()
     @current_player = ' '
     @board = Board.new()
@@ -67,20 +66,27 @@ class TicTacToe
     player1_name = gets.chomp
     puts "Enter a single character as your sign:"
     player1_sign = gets.chomp
+
     puts "Enter Player 2's Name:"
     player2_name = gets.chomp
     puts "Enter a single character as your sign:"
     player2_sign = gets.chomp
+
     @player1 = Player.new(player1_name, player1_sign)
     @player2 = Player.new(player2_name, player2_sign)
+
     until(@board.win?) do
-      current_player = current_player != @player1 ? @player1 : @player2;
-      puts "It's #{current_player.name} turn!"
-      puts "Enter a the row and column with space between..."
+      @current_player = @current_player != @player1 ? @player1 : @player2;
+      puts "It's #{current_player.name}'s' turn!"
+      puts "Enter a the row and column with a space between..."
       @board.display_board
       coordinates = gets.chomp.split.map{|coor| coor.to_i}
       @board.place(coordinates[0], coordinates[1], current_player.sign)
     end
+
+    @board.display_board
+    puts "#{@current_player.name} win the game!"
+    
   end
 
   def win?

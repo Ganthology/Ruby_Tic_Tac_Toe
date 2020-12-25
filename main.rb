@@ -37,6 +37,15 @@ class Board
     return true if diagonal && board[1][1] != '_'
     false
   end
+
+  def tie?
+    # check if contains any '_'
+    # if not contains any then the board is full = tie game
+    board.each do |row|
+      return false if row.any?('_')
+    end
+    true
+  end
 end
 
 class Player
@@ -75,7 +84,7 @@ class TicTacToe
     @player1 = Player.new(player1_name, player1_sign)
     @player2 = Player.new(player2_name, player2_sign)
 
-    until(@board.win?) do
+    until(@board.win? || @board.tie?) do
       @current_player = @current_player != @player1 ? @player1 : @player2;
       puts "It's #{current_player.name}'s' turn!"
       puts "Enter a the row and column with a space between..."
@@ -85,12 +94,13 @@ class TicTacToe
     end
 
     @board.display_board
-    puts "#{@current_player.name} win the game!"
-    
-  end
 
-  def win?
-    @board.win?
+    if @board.win?
+      puts "#{@current_player.name} win the game!"
+    else
+      puts 'It\'s a Tie!'
+    end
+
   end
 
 end

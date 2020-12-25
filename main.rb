@@ -1,9 +1,7 @@
-=begin
-things needed:
-board/display
-players/input
-game/round/winning conditions
-=end
+# things needed:
+# board/display
+# players/input
+# game/round/winning conditions
 
 class Board
   attr_reader :board
@@ -13,16 +11,28 @@ class Board
   end
 
   def new_board
-    @board = Array.new(3) {Array.new(3, "_")}
+    @board = Array.new(3) { Array.new(3, '_') }
   end
 
   def display_board
     puts '  0  1  2'
-    @board.each_with_index { | row, index | puts "#{index} #{row.join("  ")}"}
+    @board.each_with_index { |row, index| puts "#{index} #{row.join('  ')}" }
   end
 
   def place(row, column, sign)
     @board[row][column] = sign
+  end
+
+  def valid_coor?(row, column)
+    # assume the size is perfect square
+    return false if row >= 3 || column >= 3
+    true
+  end
+
+  def occupied?(row, column)
+    # assume the size is perfect square
+    return true if @board[row][column] != '_'
+    false
   end
 
   def win?
@@ -35,6 +45,7 @@ class Board
     diagonal = true if board[0][0] != '_' && board[0][0] == board[1][1] && board[1][1] == board[2][2]
     diagonal = true if board[0][0] != '_' && board[0][2] == board[1][1] && board[1][1] == board[2][0]
     return true if diagonal && board[1][1] != '_'
+
     false
   end
 
@@ -62,34 +73,39 @@ end
 
 class TicTacToe
   attr_accessor :player1, :player2, :current_player
-  def initialize()
+  def initialize
     @current_player = ' '
-    @board = Board.new()
+    @board = Board.new
   end
 
-  def game()
+  def game
     # while not winning conditions && none?(" ")
     # receive input from players
     # turn by turn, display current board with signs on it
     puts "Enter Player 1's Name:"
     player1_name = gets.chomp
-    puts "Enter a single character as your sign:"
+    puts 'Enter a single character as your sign:'
     player1_sign = gets.chomp
 
     puts "Enter Player 2's Name:"
     player2_name = gets.chomp
-    puts "Enter a single character as your sign:"
+    puts 'Enter a single character as your sign:'
     player2_sign = gets.chomp
 
     @player1 = Player.new(player1_name, player1_sign)
     @player2 = Player.new(player2_name, player2_sign)
 
-    until(@board.win? || @board.tie?) do
-      @current_player = @current_player != @player1 ? @player1 : @player2;
-      puts "It's #{current_player.name}'s' turn!"
-      puts "Enter a the row and column with a space between..."
+    until @board.win? || @board.tie?
+      @current_player = @current_player != @player1 ? @player1 : @player2
       @board.display_board
-      coordinates = gets.chomp.split.map{|coor| coor.to_i}
+      puts "It's #{current_player.name}'s turn!"
+      puts 'Enter a the row and column with a space between...'
+      coordinates = gets.chomp.split.map { |coor| coor.to_i }
+      until @board.valid_coor?(coordinates[0], coordinates[1]) && !@board.occupied?(coordinates[0], coordinates[1])
+        puts('Wrong format, please enter again...') if !@board.valid_coor?(coordinates[0], coordinates[1])
+        puts('The place is occupied, please choose another place...') if @board.occupied?(coordinates[0], coordinates[1])
+        coordinates = gets.chomp.split.map { |coor| coor.to_i }
+      end
       @board.place(coordinates[0], coordinates[1], current_player.sign)
     end
 
@@ -100,9 +116,7 @@ class TicTacToe
     else
       puts 'It\'s a Tie!'
     end
-
   end
-
 end
 
 game = TicTacToe.new

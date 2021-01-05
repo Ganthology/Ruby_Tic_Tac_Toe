@@ -1,6 +1,7 @@
 # Tic Tac Toe
 ## Introduction
 This is a project from The Odin Project to display the ability to use the Object Oriented Programming concept in Ruby language. The first project is to design a Tic Tac Toe game using Ruby.
+[![Run on Repl.it](https://repl.it/badge/github/Ganthology/Ruby_Tic_Tac_Toe)](https://repl.it/github/Ganthology/Ruby_Tic_Tac_Toe)
 ## Features
 The project involves 3 classes - Board class, Player class, and Tic Tac Toe class.
 
